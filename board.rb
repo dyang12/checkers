@@ -74,6 +74,14 @@ class Board
     end
   end
   
+  def perform_moves!(move_sequence)
+    move_sequence.each do |(start_pos, end_pos)|
+      p start_pos
+      p end_pos
+      move(start_pos, end_pos)
+    end
+  end
+  
   def []=(pos, piece)
     dx, dy = pos
     @board[dx][dy] = piece

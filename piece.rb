@@ -34,8 +34,9 @@ class Piece
         poss_moves[:slide] << pos
       else
         if board.is_enemy?(pos, color)
-        pos = increment_position(pos, delta)
-        poss_moves[:jump] << pos if valid_jump?(board, pos)
+          pos = increment_position(pos, delta)
+          poss_moves[:jump] << pos if board.empty?(pos)
+        end
       end
     end
     
@@ -44,14 +45,7 @@ class Piece
   
 private
 def valid_slide?(board, pos)
-  return true if board.empty?(pos) && board.in_bounds?(pos)
-  false
-end
-
-def valid_jump?(board, pos)
-  return true if board.empty?(pos)
-  
-  false
+  board.empty?(pos) && board.in_bounds?(pos)
 end
   
 attr_reader :deltas
