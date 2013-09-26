@@ -13,7 +13,7 @@ class Piece
   def initialize(initial_pos, color)
     @color = color
     @curr_pos = initial_pos
-    @type = "P"
+    @type = "O"
     
     color == :black ? num = -1 : num = 1
     @deltas = [[num, 1], [num, -1]]
