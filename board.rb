@@ -56,6 +56,12 @@ class Board
     
   end
   
+  def dup
+    temp_board = Board.new
+    temp_board.board = dup_board
+    temp_board
+  end
+  
   def []=(pos, piece)
     dx, dy = pos
     @board[dx][dy] = piece
@@ -122,16 +128,14 @@ class Board
     end
   end
   
-  def dup
-    temp_board = Board.new
-    temp_board.board = dup_board
-    temp_board
-  end
-  
   def dup_board
     dup_board = Array.new(8) { Array.new(8) }
     
-    
+    board.each_with_index do |row, i|
+      row.each_with_index do |element, j|
+        dup_board[i][j] = element
+      end
+    end
     
     dup_board
   end

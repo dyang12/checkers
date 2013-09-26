@@ -20,7 +20,7 @@ class Piece
   end
   
   def promote?
-    (color == :black && curr_pos[0] = 0) || (color == :red && curr_pos[0] == 7)
+    (color == :black && curr_pos[0] == 0) || (color == :red && curr_pos[0] == 7)
   end
   
   def king_me
