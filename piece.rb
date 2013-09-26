@@ -1,11 +1,12 @@
 class Piece
-  attr_reader :color, :pos
+  attr_reader :color, :pos, :type
   
-  def initialize(initial_pos, option = {})
-    option.has_key?(:black) ?  @color = :black : @color = :red
+  def initialize(initial_pos, color)
+    @color = color
     @pos = initial_pos
+    @type = "P"
     
-    color == black ? num = 1 : num = -1
+    color == :black ? num = 1 : num = -1
     @sliding_deltas = [[num, 1], [num, -1]]
     @jumping_deltas = [[num+1, 2], [num+1, -2]]
   end
@@ -15,6 +16,7 @@ class Piece
   end
   
   def king_piece
+    @type = "K"
     #changes deltas of piece so that piece can move like a king
   end
   
