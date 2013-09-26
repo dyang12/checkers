@@ -74,6 +74,10 @@ class Board
     false
   end
   
+  def is_enemy?(pos, color)
+    return true unless self[pos].color == color
+  end
+  
   def lose?(color)
     #checks if color has anymore pieces
     #returns true if no pieces left, false otherwise
