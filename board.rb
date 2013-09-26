@@ -53,7 +53,11 @@ class Board
   end
   
   def perform_moves(move_sequence)
-    
+    if valid_move_seq?(move_sequence)
+      perform_moves!(move_sequence)
+    else
+      raise IllegalMoveError.new "That is an invalid move sequence!"
+    end
   end
   
   def dup
@@ -94,6 +98,12 @@ class Board
     #returns true if no pieces left, false otherwise
   end
   
+  def perform_moves!(move_sequence)
+    move_sequence.each do |(start_pos, end_pos)|
+      move(start_pos, end_pos)
+    end
+  end
+  
   private
   
   def populate_board(color)
@@ -120,11 +130,13 @@ class Board
   
   def valid_move_seq?(move_sequence)
     temp_board = dup
-  end
-  
-  def perform_moves!(move_sequence)
-    move_sequence.each do |(start_pos, end_pos)|
-      move(start_pos, end_pos)
+    
+    begin
+      temp_board.perform_moves!(move_sequence)
+    rescue IllegalMoveError
+      return false
+    else
+      return true
     end
   end
   
@@ -133,7 +145,12 @@ class Board
     
     board.each_with_index do |row, i|
       row.each_with_index do |element, j|
-        dup_board[i][j] = element
+        if element.nil?
+          dup_board[i][j] = nil
+        else
+          temp_piece = element.dup
+          dup_board[i][j] = temp_piece
+        end
       end
     end
     

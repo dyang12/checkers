@@ -47,6 +47,10 @@ class Piece
     poss_moves
   end
   
+  def dup
+    Piece.new(curr_pos, color)
+  end
+  
 private
 def valid_slide?(board, pos)
   board.empty?(pos) && board.in_bounds?(pos)
