@@ -2,15 +2,12 @@ class Piece
   attr_reader :color, :pos
   
   def initialize(initial_pos, option = {})
-    if option.has_key?(:black)
-      @color = :black
-    else
-      @color = :red
-    end
-    
+    option.has_key?(:black) ?  @color = :black : @color = :red
     @pos = initial_pos
-    @sliding_deltas = []
-    @jumping_deltas = []
+    
+    color == black ? num = 1 : num = -1
+    @sliding_deltas = [[num, 1], [num, -1]]
+    @jumping_deltas = [[num+1, 2], [num+1, -2]]
   end
   
   def poss_moves(board)
@@ -28,4 +25,8 @@ class Piece
   def jumping_moves(board)
     #finds all possible moves the piece can make by jumping- including chains
   end
+  
+  private
+  
+  attr_reader :sliding_deltas, :jumping_deltas
 end

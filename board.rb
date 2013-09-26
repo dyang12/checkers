@@ -23,22 +23,25 @@ class Board
   end
   
   def []=(pos, piece)
-    #sets board at pos to piece
+    raise "Out of Bounds" unless in_bounds?(pos)
+    dx, dy = pos
+    @board[dx][dy] = piece
   end
   
   def [](pos)
-    #check if in bounds
-    #else returns element at pos on board
+    raise "Out of Bounds" unless in_bounds?(pos)
+    dx, dy = pos
+    board[dx][dy]
   end
   
   def empty?(pos)
-    #checks if board @ pos is empty or filled
-    #returns true if no piece, false otherwise
+    return false if board[dx][dy].nil?
+    true
   end
   
   def in_bounds?(pos)
-    #checks if pos is in bounds in the board
-    #returns true if in bounds, false otherwise
+    return true if pos.each { |i| i.between?(1, 7) }
+    false
   end
   
   def lose?(color)
