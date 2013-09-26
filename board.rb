@@ -14,24 +14,6 @@ class Board
     populate_board(:black)
   end
   
-  def populate_board(color)
-    color == :red ? rows = (0..2).to_a : rows = (5..7).to_a
-    rows.each do |row|
-      if row.even?
-        (0..7).select { |col| col.even? }.each do |even_col|
-          piece = Piece.new([row, even_col], color)
-          self[[row, even_col]] = piece
-        end
-      else
-        (0..7).select { |col| col.odd? }.each do |odd_col|
-          piece = Piece.new([row, odd_col], color)
-          self[[row, odd_col]] = piece
-        end
-      end
-    end
-  end
-  
-  
   def display_board
     puts "  0 1 2 3 4 5 6 7"
     (0..7).each do |i|
@@ -49,11 +31,6 @@ class Board
     end
   end
   
-  def render_piece(piece)
-    return piece.type.light_white.underline if piece.color == :black
-    return piece.type.red.underline
-  end
-  
   def move(start_pos, end_pos)
     poss_moves_hash = self[start_pos].poss_moves(self)
     poss_moves = poss_moves_hash.values.flatten(1)
@@ -67,6 +44,7 @@ class Board
       
       piece = self[start_pos]
       piece.curr_pos = end_pos
+      piece.king_me if piece.promote?
       self[end_pos] = piece
       self[start_pos] = nil
     else
@@ -74,12 +52,8 @@ class Board
     end
   end
   
-  def perform_moves!(move_sequence)
-    move_sequence.each do |(start_pos, end_pos)|
-      p start_pos
-      p end_pos
-      move(start_pos, end_pos)
-    end
+  def perform_moves(move_sequence)
+    
   end
   
   def []=(pos, piece)
@@ -112,5 +86,53 @@ class Board
   def lose?(color)
     #checks if color has anymore pieces
     #returns true if no pieces left, false otherwise
+  end
+  
+  private
+  
+  def populate_board(color)
+    color == :red ? rows = (0..2).to_a : rows = (5..7).to_a
+    rows.each do |row|
+      if row.even?
+        (0..7).select { |col| col.even? }.each do |even_col|
+          piece = Piece.new([row, even_col], color)
+          self[[row, even_col]] = piece
+        end
+      else
+        (0..7).select { |col| col.odd? }.each do |odd_col|
+          piece = Piece.new([row, odd_col], color)
+          self[[row, odd_col]] = piece
+        end
+      end
+    end
+  end
+  
+  def render_piece(piece)
+    return piece.type.light_white.underline if piece.color == :black
+    return piece.type.red.underline
+  end
+  
+  def valid_move_seq?(move_sequence)
+    temp_board = dup
+  end
+  
+  def perform_moves!(move_sequence)
+    move_sequence.each do |(start_pos, end_pos)|
+      move(start_pos, end_pos)
+    end
+  end
+  
+  def dup
+    temp_board = Board.new
+    temp_board.board = dup_board
+    temp_board
+  end
+  
+  def dup_board
+    dup_board = Array.new(8) { Array.new(8) }
+    
+    
+    
+    dup_board
   end
 end

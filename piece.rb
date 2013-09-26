@@ -19,7 +19,11 @@ class Piece
     @deltas = [[num, 1], [num, -1]]
   end
   
-  def promote
+  def promote?
+    (color == :black && curr_pos[0] = 0) || (color == :red && curr_pos[0] == 7)
+  end
+  
+  def king_me
     @type = "K"
     
     color == :black ? num = 1 : num = -1
