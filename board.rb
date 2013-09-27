@@ -31,33 +31,6 @@ class Board
     end
   end
   
-  def move(start_pos, end_pos)
-    poss_moves_hash = self[start_pos].poss_moves(self)
-    poss_moves = poss_moves_hash.values.flatten(1)
-
-    if empty?(start_pos)
-       raise IllegalMoveError.new "There's nothing there!"
-    elsif self[start_pos].color != color
-       raise IllegalMoveError.new "That's not your piece!"
-    else
-      if poss_moves.one? {|pos| pos == end_pos }
-        if poss_moves_hash[:jump].include?(end_pos)
-          delta = [(end_pos[0]-start_pos[0])/2, (end_pos[1]-start_pos[1])/2]
-          jumped_pos = increment_position(start_pos, delta)
-          self[jumped_pos] = nil
-        end
-      
-        piece = self[start_pos]
-        piece.curr_pos = end_pos
-        piece.king_me if piece.promote?
-        self[end_pos] = piece
-        self[start_pos] = nil
-      else
-        raise IllegalMoveError.new "You cannot move there!"
-      end
-    end
-  end
-  
   def perform_moves(move_sequence)
     if valid_move_seq?(move_sequence)
       perform_moves!(move_sequence)
@@ -103,12 +76,6 @@ class Board
     board.flatten.compact.none? { |piece| piece.color == color}
   end
   
-  def perform_moves!(move_sequence)
-    move_sequence.each do |(start_pos, end_pos)|
-      move(start_pos, end_pos)
-    end
-  end
-  
   private
   
   def populate_board(color)
@@ -131,6 +98,39 @@ class Board
   def render_piece(piece)
     return piece.type.light_white.underline if piece.color == :black
     return piece.type.red.underline
+  end
+  
+  protected
+  
+  def move(start_pos, end_pos)
+    poss_moves_hash = self[start_pos].poss_moves(self)
+    poss_moves = poss_moves_hash.values.flatten(1)
+
+    if empty?(start_pos)
+       raise IllegalMoveError.new "There's nothing there!"
+    else
+      if poss_moves.one? {|pos| pos == end_pos }
+        if poss_moves_hash[:jump].include?(end_pos)
+          delta = [(end_pos[0]-start_pos[0])/2, (end_pos[1]-start_pos[1])/2]
+          jumped_pos = increment_position(start_pos, delta)
+          self[jumped_pos] = nil
+        end
+      
+        piece = self[start_pos]
+        piece.curr_pos = end_pos
+        piece.king_me if piece.promote?
+        self[end_pos] = piece
+        self[start_pos] = nil
+      else
+        raise IllegalMoveError.new "You cannot move there!"
+      end
+    end
+  end
+  
+  def perform_moves!(move_sequence)
+    move_sequence.each do |(start_pos, end_pos)|
+      move(start_pos, end_pos)
+    end
   end
   
   def valid_move_seq?(move_sequence)

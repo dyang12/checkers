@@ -32,7 +32,7 @@ class Player
   def convert_to_position(str)
     pos = str.scan(/\w/)
     if pos.length > 2
-      raise ArgumentExceptionError.new "That is not a position on the board"
+      raise ArgumentError.new "That is not a position on the board"
     else
       pos.map! { |i| i.to_i }
     end
